@@ -1,55 +1,66 @@
 #include "Form.hpp"
 
-void	checkGrade(short grade) {
+void	checkGradeForm(short grade) {
 	if(1 > grade)
 		throw Form::GradeTooHighException();
 	else if(grade > 150)
 		throw Form::GradeTooLowException();
 }
 
-Form::Form(const std::string &name, short grade): name(name), _signed(false) {
-	checkGrade(grade);
+Form::Form(void): name("Default"), signed(false), signGrade(30), executeGrade(70) {
+	checkGradeForm(signGrade);
+	checkGradeForm(executeGrade);
+}
+
+Form::Form(const std::string &name, short signGrade, short executeGrade): name(name), signed(false), signGrade(signGrade), executeGrade(executeGrade) {
+	checkGradeForm(signGrade);
+	checkGradeForm(executeGrade);
 }
 
 Form::~Form(void) {
 
 }
 
-Form::Form(const Form &copy) {
+Form::Form(const Form &copy): name(copy.name), signed(copy.signed), signGrade(copy.signGrade), executeGrade(copy.executeGrade) {
 
 	*this = copy;
 }
 
 Form	&Form::operator=(const Form &copy) {
-	this->grade = copy.grade;
+	this->signed = copy.signed;
 	return (*this);
-}
-
-short	Form::getGrade(void) const {
-	return (this->grade);
 }
 
 const std::string	&Form::getName(void) const {
 	return (this->name);
 }
 
-void	Form::setGrade(short grade) {
-	checkGrade(grade);
-	this->grade = grade;
+bool	Form::isSigned(void) const {
+	return (this->signed);
 }
 
-void	Form::incrementGrade(void) {
-	setGrade(this->grade - 1);
+short	Form::getSignGrade(void) const {
+	return (this->signGrade);
 }
 
-void	Form::decrementGrade(void) {
-	setGrade(this->grade + 1);
+short	Form::getExecuteGrade(void) const {
+	return (this->executeGrade);
+}
+
+void	Form::beSigned(Bureaucrat &bureaucrat) {
+	if (bureaucrat.getGrade() > this->signGrade)
+		throw Form::GradeTooLowException();
+	this->signed = true;
+	std::cout << "Form " << this->name << " has been signed" << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &o, Form const &b)
 {
 
-	o << b.getName() << ", Form grade " << b.getGrade() << ".";
+	o << b.getName() <<" Form\n" <<
+		"signed: " << b.isSigned() << "\n" <<
+		"signGrade: " << b.getSignGrade() << "\n" <<
+		"executeGrade: " << b.getExecuteGrade() << "\n";
 
 	return o;
 }

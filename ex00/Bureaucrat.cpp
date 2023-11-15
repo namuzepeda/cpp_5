@@ -7,6 +7,10 @@ void	checkGrade(short grade) {
 		throw Bureaucrat::GradeTooLowException();
 }
 
+Bureaucrat::Bureaucrat(): name("Default"), grade(75) {
+	checkGrade(grade);
+}
+
 Bureaucrat::Bureaucrat(const std::string &name, short grade): name(name), grade(grade) {
 	checkGrade(grade);
 }
@@ -21,6 +25,7 @@ Bureaucrat::Bureaucrat(const Bureaucrat &copy) {
 }
 
 Bureaucrat	&Bureaucrat::operator=(const Bureaucrat &copy) {
+	this->name = copy.name;
 	this->grade = copy.grade;
 	return (*this);
 }
